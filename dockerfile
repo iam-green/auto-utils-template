@@ -23,4 +23,4 @@ RUN chmod +x start.sh
 
 VOLUME ["/app/data", "/app/lib"]
 
-CMD ./start.sh -dd ${DATA_DIRECTORY} -ld ${LIBRARY_DIRECTORY}
+CMD ["./start.sh", "-dd", "${DATA_DIRECTORY}", "-ld", "${LIBRARY_DIRECTORY}"]
