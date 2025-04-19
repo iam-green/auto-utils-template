@@ -53,8 +53,8 @@ handle_argument() {
         ;;
       -u|--update)
         # Update the current script using curl from the GitHub repository.
-        curl -s -o "./start" -L "https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH/start"
-        chmod +x "./start"
+        curl -s -o "./start.sh" -L "https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH/start.sh"
+        chmod +x "./start.sh"
         echo "Code updated. Please re-run the code."
         exit 0
         ;;

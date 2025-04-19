@@ -44,7 +44,7 @@ docker create -it --name auto-utils-template \
 ### Setup Command
 
 ```bash
-chmod +x ./start && ./start
+chmod +x ./start.sh && ./start.sh
 ```
 
 ### Options

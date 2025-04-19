@@ -20,7 +20,7 @@ RUN apt-get update && \
   useradd -m -u ${UID} -g app app && \
   echo 'app ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-COPY start .
+COPY start.sh .
 
 RUN chmod +x start && \
   chown -R app:app /app
@@ -29,4 +29,4 @@ VOLUME ["/app/data", "/app/lib"]
 
 USER app
 
-CMD ./start -dd ${DATA_DIRECTORY} -ld ${LIBRARY_DIRECTORY}
+CMD ./start.sh -dd ${DATA_DIRECTORY} -ld ${LIBRARY_DIRECTORY}
