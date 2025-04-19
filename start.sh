@@ -104,7 +104,7 @@ create_group_user() {
     useradd -u "$UID" -g "$GID" -m user
   fi
   USER=$( [ "$(uname)" = "Darwin" ] && id -un "$UID" || getent passwd "$UID" | cut -d: -f1 )
-  echo 'user ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+  echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 }
 
 handle_argument "$@"
