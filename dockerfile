@@ -22,7 +22,7 @@ RUN apt-get update && \
 
 COPY start.sh .
 
-RUN chmod +x start && \
+RUN chmod +x start.sh && \
   chown -R app:app /app
 
 VOLUME ["/app/data", "/app/lib"]
