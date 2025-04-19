@@ -88,8 +88,28 @@ directory_setting() {
   LIBRARY_DIRECTORY=$(realpath "$LIBRARY_DIRECTORY")
 }
 
+create_group_user() {
+  if [ -z "$UID" ] || [ -z "$GID" ]; then
+    USER=$( [ "$(uname)" = "Darwin" ] && id -un || getent passwd "$(id -u)" | cut -d: -f1 )
+    return 0
+  fi
+  if id "$UID" >/dev/null 2>&1 && getent group "$GID" >/dev/null 2>&1; then
+    USER=$( [ "$(uname)" = "Darwin" ] && id -un "$UID" || getent passwd "$UID" | cut -d: -f1 )
+    return 0
+  fi
+  if ! getent group "$GID" >/dev/null 2>&1; then
+    groupadd -g "$GID" user
+  fi
+  if ! id "$UID" &>/dev/null; then
+    useradd -u "$UID" -g "$GID" -m user
+  fi
+  USER=$( [ "$(uname)" = "Darwin" ] && id -un "$UID" || getent passwd "$UID" | cut -d: -f1 )
+  echo 'user ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+}
+
 handle_argument "$@"
 set_timezone
 directory_setting
+create_group_user
 
 # Add your desired functions or code from here

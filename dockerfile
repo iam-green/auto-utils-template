@@ -12,21 +12,15 @@ ENV TZ=Asia/Seoul \
 
 WORKDIR /app
 
-# Install required packages, create group/user, and configure sudoers
+# Install required packages
 RUN apt-get update && \
   apt-get install -y --no-install-recommends curl xz-utils sudo && \
-  rm -rf /var/lib/apt/lists/* && \
-  groupadd -g ${GID} app && \
-  useradd -m -u ${UID} -g app app && \
-  echo 'app ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+  rm -rf /var/lib/apt/lists/*
 
 COPY start.sh .
 
-RUN chmod +x start.sh && \
-  chown -R app:app /app
+RUN chmod +x start.sh
 
 VOLUME ["/app/data", "/app/lib"]
-
-USER app
 
 CMD ./start.sh -dd ${DATA_DIRECTORY} -ld ${LIBRARY_DIRECTORY}
