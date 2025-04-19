@@ -42,6 +42,14 @@ jobs:
           registry: ghcr.io
           username: ${{ steps.env.outputs.OWNER }}
           password: ${{ secrets.GHCR_TOKEN }}
+      
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Build and Push
         id: docker_build
@@ -52,3 +60,5 @@ jobs:
           platforms: linux/amd64, linux/arm64
           tags: ${{ steps.env.outputs.GHCR_REPO }}:latest
           push: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
