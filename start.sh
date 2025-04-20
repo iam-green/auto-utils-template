@@ -106,6 +106,25 @@ create_group_user() {
   USER=$( [ "$(uname)" = "Darwin" ] && id -un "$UID" || getent passwd "$UID" | cut -d: -f1 )
 }
 
+get_os() {
+  if [ "$(uname)" == "Darwin" ]; then
+    echo "macos"
+  else
+    echo "linux"
+  fi
+}
+
+get_arch() {
+  case $(uname -m) in
+    "x86_64")
+      echo "amd64"
+      ;;
+    "arm64" | "aarch64")
+      echo "arm64"
+      ;;
+  esac
+}
+
 handle_argument "$@"
 set_timezone
 directory_setting
