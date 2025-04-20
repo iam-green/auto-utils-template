@@ -9,7 +9,7 @@
 
 ```bash
 docker create -it --name auto-utils-template \
-  ghcr.io/iam-green/auto-utils-template
+  ghcr.io/iam-green/auto-utils-template:latest
 ```
 
 ### Environments
