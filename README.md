@@ -9,6 +9,8 @@
 
 ```bash
 docker create -it --name auto-utils-template \
+  -v /path/to/data:/app/data \
+  -v /path/to/lib:/app/lib \
   ghcr.io/iam-green/auto-utils-template:latest
 ```
 
