@@ -17,10 +17,12 @@ RUN apt-get update && \
   apt-get install -y --no-install-recommends curl xz-utils sudo && \
   rm -rf /var/lib/apt/lists/*
 
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+  
 COPY start.sh .
-
 RUN chmod +x start.sh
 
 VOLUME ["/app/data", "/app/lib"]
 
-CMD ["./start.sh", "-dd", "${DATA_DIRECTORY}", "-ld", "${LIBRARY_DIRECTORY}"]
+ENTRYPOINT ["./entrypoint.sh"]
