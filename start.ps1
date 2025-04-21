@@ -18,15 +18,17 @@ param(
   [switch]$CodeUpdate
 )
 
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+foreach ($paramName in $MyInvocation.MyCommand.Parameters.Keys) {
+  Set-Variable -Name $paramName -Value (Get-Variable -Name $paramName -ValueOnly) -Scope Global
+}
 
-if (-not $LibraryDirectory) {
-  $LibraryDirectory = (Join-Path ([System.Environment]::GetFolderPath('UserProfile')) '.iam-green')
+if (-not $global:LibraryDirectory) {
+  $global:LibraryDirectory = (Join-Path ([System.Environment]::GetFolderPath('UserProfile')) '.iam-green')
 }
 
 # Default repository settings
-$GITHUB_REPO = "iam-green/auto-utils-template"  # GitHub repository.
-$GITHUB_BRANCH = "main"                         # GitHub branch to use for update.
+$global:GITHUB_REPO = "iam-green/auto-utils-template"  # GitHub repository.
+$global:GITHUB_BRANCH = "main"                         # GitHub branch to use for update.
 
 function Show-Usage {
   Write-Host "Usage: ./start.ps1 [OPTIONS]"
@@ -37,13 +39,13 @@ function Show-Usage {
   Write-Host "  -u, -update                           Update code to the latest version."
 }
 
-if ($ShowHelp) {
+if ($global:ShowHelp) {
   Show-Usage
   exit 0
 }
 
 # Execute update
-if ($CodeUpdate) {
+if ($global:CodeUpdate) {
   $url = "https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH/start.ps1"
   try {
     Invoke-WebRequest -Uri $url -OutFile "./start.ps1" -ErrorAction Stop
@@ -56,21 +58,16 @@ if ($CodeUpdate) {
 }
 
 function Directory-Setting {
-  if (-not (Test-Path $DataDirectory -PathType Container)) {
-    New-Item -ItemType Directory -Path $DataDirectory -Force | Out-Null
+  if (-not (Test-Path $global:DataDirectory -PathType Container)) {
+    New-Item -ItemType Directory -Path $global:DataDirectory -Force | Out-Null
   }
-  if (-not (Test-Path $LibraryDirectory -PathType Container)) {
-    New-Item -ItemType Directory -Path $LibraryDirectory -Force | Out-Null
+  if (-not (Test-Path $global:LibraryDirectory -PathType Container)) {
+    New-Item -ItemType Directory -Path $global:LibraryDirectory -Force | Out-Null
   }
-  # Resolve absolute paths
-  $resolvedData = (Resolve-Path $DataDirectory).Path
-  $resolvedLibrary = (Resolve-Path $LibraryDirectory).Path
-  return @($resolvedData, $resolvedLibrary)
+  $global:DataDirectory = (Resolve-Path $global:DataDirectory).Path
+  $global:LibraryDirectory = (Resolve-Path $global:LibraryDirectory).Path
 }
 
-# Set directory paths
-$resolvedPaths = Directory-Setting
-$DataDirectory = $resolvedPaths[0]
-$LibraryDirectory = $resolvedPaths[1]
+Directory-Setting
 
 # Add your desired functions or code from here
