@@ -11,18 +11,22 @@ param(
 
   [Parameter(Mandatory=$false, HelpMessage="Choose the library directory.")]
   [Alias("ld", "library-directory")]
-  [string]$LibraryDirectory = "$([System.Environment]::GetFolderPath('UserProfile'))/.iam-green",
+  [string]$LibraryDirectory,
 
   [Parameter(Mandatory=$false, HelpMessage="Update code to the latest version.")]
   [Alias("u", "update")]
   [switch]$CodeUpdate
 )
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+if (-not $LibraryDirectory) {
+  $LibraryDirectory = (Join-Path ([System.Environment]::GetFolderPath('UserProfile')) '.iam-green')
+}
+
 # Default repository settings
 $GITHUB_REPO = "iam-green/auto-utils-template"  # GitHub repository.
 $GITHUB_BRANCH = "main"                         # GitHub branch to use for update.
-
-# Add your desired environment variables here
 
 function Show-Usage {
   Write-Host "Usage: ./start.ps1 [OPTIONS]"
