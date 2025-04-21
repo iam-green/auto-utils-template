@@ -57,6 +57,23 @@ if ($global:CodeUpdate) {
   }
 }
 
+function Get-SystemInfo {
+  $osInfo = @{}
+  if ($IsWindows) {
+    $osInfo.OS = "windows"
+    $osInfo.Architecture = if ($env:PROCESSOR_ARCHITECTURE -eq "AMD64") { "amd64" } else { "arm64" }
+  }
+  elseif ($IsLinux) {
+    $osInfo.OS = "linux"
+    $osInfo.Architecture = if ((uname -m) -eq "x86_64") { "amd64" } else { "arm64" }
+  }
+  elseif ($IsMacOS) {
+    $osInfo.OS = "macos"
+    $osInfo.Architecture = if ((uname -m) -eq "x86_64") { "amd64" } else { "arm64" }
+  }
+  return $osInfo
+}
+
 function Directory-Setting {
   if (-not (Test-Path $global:DataDirectory -PathType Container)) {
     New-Item -ItemType Directory -Path $global:DataDirectory -Force | Out-Null
